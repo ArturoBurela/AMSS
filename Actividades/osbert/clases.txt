@@ -1,0 +1,63 @@
+
+@startuml
+	
+	Class Venta {
+		-Cliente cliente;
+		-float Subtotal;
+		-float Impuestos;
+		-float Total;
+		-bool Pagado;
+
+		-void alta();
+		-void baja();
+		-void consulta();
+		+void generarReporte();
+	}
+	Class Compra {
+		-Cliente cliente;
+		-float Subtotal;
+		-float Impuestos;
+		-float Total;
+		-bool Pagado;
+
+		-void alta();
+		-void baja();
+		-void consulta();
+		+void generarReporte();
+	}
+	Class Obra {
+		-String Artisa;
+		-float Valor;
+		-String Técnica;
+		-float Ancho;
+		-float Alto;
+		-float Largo;
+
+		-void Alta();
+		-void Baja();
+		-void Consulta();
+	}
+	Class Almacen {
+		-Obra obras[];
+
+		-void Alta();
+		-void Baja();
+		-void Consulta();
+	}
+	Class Cliente {
+		-String Nombre;
+		-String Apellido;
+		-String Dirección;
+
+		-void Alta();
+		-void Baja();
+		-void Consulta();
+	}
+	
+
+	Venta -- Almacen : usa
+	Compra -- Almacen : usa
+	Almacen *-- Obra : resguarda
+	Compra *-- Cliente
+	Venta *-- Cliente
+@enduml
