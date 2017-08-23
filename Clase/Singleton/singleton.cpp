@@ -18,11 +18,10 @@ class Singleton {
         if(!instance){
           instance = new Singleton;
         }
-        std::cout << "/* message */" << '\n';
         return instance;
       }
-      void operacion(){
-        std::cout << "Dir de instancia"<< instance << '\n';
+      void operation(){
+        std::cout << "Dir instance"<< instance << '\n';
       };
 };
 
@@ -32,12 +31,12 @@ Singleton* Singleton::instance = 0;
 
 int main(int argc, char const *argv[]) {
   //Singleton s;
-  //s.operacion();
+  //s.operation();
   Singleton* lol = Singleton::getInstance();
-  lol->operacion();
+  lol->operation();
   Singleton* lol2 = Singleton::getInstance();
-  lol->operacion();
+  lol->operation();
   Singleton* lol3 = Singleton::getInstance();
-  lol->operacion();
+  lol->operation();
   return 0;
 }
