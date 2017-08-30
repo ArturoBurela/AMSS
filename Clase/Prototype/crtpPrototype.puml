@@ -14,6 +14,10 @@ Class Personaje{
       +virtual Personaje* clone() = 0;
 }
 
+Class ClonePersonaje<<template>> {
+  +Personaje* clone();
+}
+
 Class Princesa {
     +Princesa(string n): Personaje(n){}
     +Princesa(const Princesa& p);
@@ -35,9 +39,10 @@ Class Heroe {
   +Personaje* clone();
 }
 
-Personaje <|.. Heroe
-Personaje <|.. Princesa
-Personaje <|.. Villano
+ClonePersonaje <|-- Heroe
+ClonePersonaje <|-- Princesa
+ClonePersonaje <|-- Villano
+Personaje <|.. ClonePersonaje
 Personaje *-- Mundo
 
 @enduml

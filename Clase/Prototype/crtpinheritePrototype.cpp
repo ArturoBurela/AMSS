@@ -12,9 +12,6 @@ El patron de prototipo está basado en copiar objetos ya existentes
 */
 
 class Mundo {
-private:
-  /* data */
-
 public:
   Mundo(string nombre) : nombre(nombre){}
   string nombre;
@@ -31,16 +28,16 @@ class Personaje{
       virtual Personaje* clone() = 0;
 };
 
-template<class SubClase>
-class ClonePersonaje : public Personaje{
+template<class Base, class SubClass>
+class Clone : public Base{
 public:
-  Personaje* clone(){
-    return new SubClase(dynamic_cast<SubClase&>(*this));
+  Base* clone(){
+    return new SubClass(dynamic_cast<SubClass&>(*this));
   }
 
 };
 
-class Princesa: public ClonePersonaje<Princesa> {
+class Princesa: public Clone<Personaje, Princesa> {
     public:
       Princesa(string n){
         nombre = n;
@@ -56,7 +53,7 @@ class Princesa: public ClonePersonaje<Princesa> {
       }
 };
 
-class Villano: public ClonePersonaje<Villano> {
+class Villano: public Clone<Personaje, Villano> {
 public:
   Villano(string n){
     nombre = n;
@@ -72,7 +69,7 @@ public:
   }
 };
 
-class Heroe: public ClonePersonaje<Heroe> {
+class Heroe: public Clone<Personaje, Heroe> {
 public:
   Heroe(string n){
     nombre = n;
