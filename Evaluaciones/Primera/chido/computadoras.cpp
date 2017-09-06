@@ -18,15 +18,19 @@ Computadora* Computadora::newComputadora(){
 Computadora* Computadora::clone(){
   return new Computadora;
 }
+
 void Computadora::seleccionarComponentes(){
   std::cout << "Seleccionando componentes" << '\n';
 }
+
 void Computadora::EnsamblarComponentes(){
   std::cout << "Ensamblar componentes" << '\n';
 }
+
 void Computadora::InstalarConfigurarSoftware(){
   std::cout << "Instalar y configurar software" << '\n';
 }
+
 void Computadora::Empaquetar(){
   std::cout << "Empaquetar Computadora" << '\n';
 }
@@ -35,12 +39,45 @@ ComputadorasFactory::ComputadorasFactory(){
 
 }
 
-Computadora* ComputadorasFactory::getComputadora(){
-  return new Computadora;
+ComputadorasFactory* ComputadorasFactory::getFactory(){
+  if (factory) {
+    return factory;
+  } else {
+    return new ComputadorasFactory;
+  }
 }
 
+ComputadorasFactory * ComputadorasFactory::factory = 0;
+
 int main(int argc, char const *argv[]) {
-  ComputadorasFactory *fabrica = new ComputadorasFactory;
+  //Cant do any of these
+  /*Computadora *c = new Computadora;
+  Clone<Laptop> *clone = new Clone<Laptop>;
+  Laptop *l = new Laptop;
+  Desktop *d = new Desktop;
+  Netbook *n = new Netbook;
+  Tablet *t = new Tablet;
+  Rack *r = new Rack;
+  Tower *to = new Tower;*/
+
+  //Create ComputadorasFactory singleton
+  ComputadorasFactory *fabrica = ComputadorasFactory::getFactory();
+
+  //Use factoryMethod to create computadoras
+  Laptop *l = fabrica->factoryMethod<Laptop>();
+  Netbook *n = fabrica->factoryMethod<Netbook>();
+  Tower *t = fabrica->factoryMethod<Tower>();
+
+  //You can use CRTP
+  Laptop *l2 = dynamic_cast<Laptop*>(l->clone());
+  Desktop *d = dynamic_cast<Desktop*>(l->clone());
+
+
+  //Dont forget to clear memory
   delete fabrica;
-  return 0;
+  delete t;
+  delete l;
+  delete l2;
+  delete n;
+  delete d;
 }

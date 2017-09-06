@@ -11,10 +11,6 @@ protected:
 public:
   virtual ~Computadora ();
   Computadora *newComputadora();
-  template<class Tipo>
-  static Tipo* factoryMethod(){
-    return new Tipo;
-  }
   string modelo;
   int serie;
   string marca;
@@ -26,22 +22,36 @@ public:
 };
 
 class ComputadorasFactory {
-public:
+protected:
+  static ComputadorasFactory *factory;
   ComputadorasFactory ();
-  Computadora* getComputadora();
+public:
+  static ComputadorasFactory* getFactory();
+  template<class Tipo>
+  Tipo* factoryMethod(){
+    return new Tipo;
+  }
+  template<class Tipo>
+  static Tipo* create(string modelo){
+    Tipo x = new Tipo;
+    x.modelo = modelo;
+    return x;
+  }
 };
 
 template <class Tipo>
 class Clone:public Computadora
 {
-	public:
-		Computadora* clonar(){
-      return new Tipo(dynamic_cast<Tipo&>(*this));
-    }
+protected:
+  Clone(){}
+public:
+  Computadora* clonar(){
+    return new Tipo(dynamic_cast<Tipo&>(*this));
+  }
 };
 
 class Laptop: public Clone<Laptop> {
-  friend class Computadora;
+  friend class ComputadorasFactory;
 private:
   Laptop(){}
 public:
@@ -49,7 +59,7 @@ public:
 };
 
 class Desktop: public Clone<Desktop> {
-  friend class Computadora;
+  friend class ComputadorasFactory;
 private:
   Desktop(){}
 public:
@@ -57,7 +67,7 @@ public:
 };
 
 class Netbook: public Clone<Netbook> {
-  friend class Computadora;
+  friend class ComputadorasFactory;
 private:
   Netbook(){}
 public:
@@ -65,7 +75,7 @@ public:
 };
 
 class Tablet: public Clone<Tablet> {
-  friend class Computadora;
+  friend class ComputadorasFactory;
 private:
   Tablet(){}
 public:
@@ -73,7 +83,7 @@ public:
 };
 
 class Rack: public Clone<Rack> {
-  friend class Computadora;
+  friend class ComputadorasFactory;
 private:
   Rack(){}
 public:
@@ -81,7 +91,7 @@ public:
 };
 
 class Tower: public Clone<Tower> {
-  friend class Computadora;
+  friend class ComputadorasFactory;
 private:
   Tower(){}
 public:
