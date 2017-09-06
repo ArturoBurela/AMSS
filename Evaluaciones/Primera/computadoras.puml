@@ -1,0 +1,76 @@
+@startuml
+Class Computadora{
+  #Computadora();
+  +string modelo;
+  +int serie;
+  +string marca;
+  +virtual Computadora* clonar();
+  +void seleccionarComponentes();
+  +void EnsamblarComponentes();
+  +void InstalarConfigurarSoftware();
+  +void Empaquetar();
+}
+
+Class ComputadorasFactory {
+  #static ComputadorasFactory *factory;
+  #ComputadorasFactory ();
+
+  +static ComputadorasFactory* getFactory();
+  +Tipo* factoryMethod();
+  +static Tipo* create(string modelo);
+}
+
+Class Clone <<Tipo>>{
+  #Clone(){}
+  +Computadora* clonar();
+}
+
+Class Laptop {
+  -Laptop();
+  +static Laptop *getLaptop();
+}
+
+Class Desktop {
+  -Desktop(){}
+  +static Desktop *getDesktop();
+}
+
+Class Netbook {
+  -Netbook();
+  +static Netbook *getNetbook();
+}
+
+Class Tablet {
+  -Tablet();
+  +static Tablet *getTablet();
+}
+
+Class Rack {
+  -Rack();
+  +static Rack *getRack();
+}
+
+Class Tower {
+  -Tower(){}
+  +static Tower *getTower();
+}
+
+Clone <|-- Laptop
+Clone <|-- Desktop
+Clone <|-- Netbook
+Clone <|-- Tablet
+Clone <|-- Rack
+Clone <|-- Tower
+
+Computadora <|.. Clone
+
+ComputadorasFactory *- ComputadorasFactory
+
+ComputadorasFactory -- Laptop : <<friend>>
+ComputadorasFactory -- Desktop : <<friend>>
+ComputadorasFactory -- Netbook : <<friend>>
+ComputadorasFactory -- Tablet : <<friend>>
+ComputadorasFactory -- Rack : <<friend>>
+ComputadorasFactory -- Tower : <<friend>>
+
+@enduml
