@@ -47,6 +47,23 @@ public:
 };
 
 template <class T>
+bool isEven(T n){
+  if(n%2==0){
+    return true;
+  }
+  return false;
+}
+
+template <class T, typename F>
+void find_if(Iterator<T> it, F f){
+  while (it.hasNext()) {
+    T x = it.next();
+    if(f(x))
+      std::cout << x << '\n';
+  }
+}
+
+template <class T>
 Iterator<T>* Collection<T>::getIterator(){
   return new Iterator<T>(*this);
 }
@@ -58,9 +75,15 @@ int main(int argc, char const *argv[]) {
   i.addElement(3);
   i.addElement(4);
   i.addElement(5);
+  i.addElement(6);
+  i.addElement(7);
+  i.addElement(8);
+  i.addElement(9);
   Iterator<int>* it = i.getIterator();
   while (it->hasNext()) {
     std::cout << it->next() << '\n';
   }
+  Iterator<int>* it2 = i.getIterator();
+  find_if<int,bool (&)(int)>(*it2,isEven<int>);
   return 0;
 }
