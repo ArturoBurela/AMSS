@@ -27,7 +27,7 @@ class Collection;
 
 class Board {
 private:
-  int space[BOARDX][BOARDY];
+  int space[BOARDX][BOARDY] = {{0}};
 public:
   Board () = default;
 };
@@ -198,6 +198,7 @@ private:
   static SpaceGod *instance;
   Board board;
   std::vector<GameObject*> objects;
+  vector<GameObject*>::iterator it;
   SpaceControl control;
   SpaceGod () = default;
 public:
@@ -231,6 +232,8 @@ public:
         x->name = "FOO";
         //Push to universe
         objects.push_back(x);
+        GameObject *y = x;
+        control.i.addElement(y);
       }
       if (j == 2) {
         EarthAnalog* x = new EarthAnalog;
@@ -241,6 +244,8 @@ public:
         x->name = "FOO";
         //Push to universe
         objects.push_back(x);
+        GameObject *y = x;
+        control.i.addElement(y);
       }
       if (j == 3) {
         ExplorationSpaceCraft* x = new ExplorationSpaceCraft;
@@ -251,6 +256,8 @@ public:
         x->name = "FOO";
         //Push to universe
         objects.push_back(x);
+        GameObject *y = x;
+        control.i.addElement(y);
       }
       if (j == 4) {
         ColonizationSpaceCraft* x = new ColonizationSpaceCraft;
@@ -261,6 +268,8 @@ public:
         x->name = "FOO";
         //Push to universe
         objects.push_back(x);
+        GameObject *y = x;
+        control.i.addElement(y);
       }
       if (j == 5) {
         ObservationSpaceCraft* x = new ObservationSpaceCraft;
@@ -271,6 +280,8 @@ public:
         x->name = "FOO";
         //Push to universe
         objects.push_back(x);
+        GameObject *y = x;
+        control.i.addElement(y);
       }
       if (j == 6) {
         StonyAsteroid* x = new StonyAsteroid;
@@ -281,6 +292,8 @@ public:
         x->name = "FOO";
         //Push to universe
         objects.push_back(x);
+        GameObject *y = x;
+        control.i.addElement(y);
       }
       if (j == 7) {
         DesertPlanet* x = new DesertPlanet;
@@ -291,10 +304,25 @@ public:
         x->name = "FOO";
         //Push to universe
         objects.push_back(x);
+        GameObject *y = x;
+        control.i.addElement(y);
       }
     }
   }
   void nextMove(/* arguments */) {
+    //Move each objects
+    int i = 0;
+    for(it = objects.begin(); it != objects.end(); it++, i++){
+      std::cout << "LOL" << '\n';
+      objects.at(i)->moveRandom();
+      /*if(objects.at(i)==ob){
+        // erase the element
+        objects.erase (objects.begin()+i);
+        return;
+      }*/
+    }
+  }
+  void checkColitions(/* arguments */) {
     /* code */
   }
 };
