@@ -1,14 +1,20 @@
 #include <iostream>
 #include <string>
 #include <vector>
+//Board size
 #ifndef BOARDX
 #define BOARDX 10
 #endif
 #ifndef BOARDY
 #define BOARDY 10
 #endif
-#ifndef TOTALELEMENTS
-#define TOTALELEMENTS 10
+//Max number of graphic elements
+#ifndef MAXELEMENTS
+#define MAXELEMENTS 20
+#endif
+//Max number of initial random elements
+#ifndef INITIALELEMENTS
+#define INITIALELEMENTS 7
 #endif
 
 using namespace std;
@@ -118,7 +124,7 @@ protected:
 public:
   friend class Iterator<T>;
   Collection (){
-    size = TOTALELEMENTS;
+    size = MAXELEMENTS;
     array = new T[size];
     cont = 0;
   }
@@ -175,20 +181,20 @@ Iterator<T>* Collection<T>::getIterator(){
 }
 
 class SpaceControl {
-private:
-  Collection<GameObject> i;
 public:
+  Collection<GameObject*> i;
   SpaceControl () = default;
   void notifyObservers(){
-    Iterator<GameObject>* it = i.getIterator();
+    Iterator<GameObject*>* it = i.getIterator();
     while (it->hasNext()) {
-      it->next().notify();
+      it->next()->notify();
     }
   }
 };
 
 class SpaceGod {
 private:
+  int total = 0;
   static SpaceGod *instance;
   Board board;
   std::vector<GameObject*> objects;
@@ -209,10 +215,84 @@ public:
     x->posX = X;
     x->posY = Y;
     objects.push_back(x);
+    GameObject *y = x;
+    control.i.addElement(y);
     return x;
   }
-  void createUniverse(/* arguments */) {
-    /* code */
+  void createUniverse() {
+    for (size_t i = 0; i < INITIALELEMENTS; i++) {
+      int j = rand()%(7 + 1);
+      if (j == 1) {
+        DesertPlanet* x = new DesertPlanet;
+        //Assing random positions
+        x->posX = rand()%(4 + 1);
+        x->posY = rand()%(4 + 1);
+        //Static name foo
+        x->name = "FOO";
+        //Push to universe
+        objects.push_back(x);
+      }
+      if (j == 2) {
+        EarthAnalog* x = new EarthAnalog;
+        //Assing random positions
+        x->posX = rand()%(4 + 1);
+        x->posY = rand()%(4 + 1);
+        //Static name foo
+        x->name = "FOO";
+        //Push to universe
+        objects.push_back(x);
+      }
+      if (j == 3) {
+        ExplorationSpaceCraft* x = new ExplorationSpaceCraft;
+        //Assing random positions
+        x->posX = rand()%(4 + 1);
+        x->posY = rand()%(4 + 1);
+        //Static name foo
+        x->name = "FOO";
+        //Push to universe
+        objects.push_back(x);
+      }
+      if (j == 4) {
+        ColonizationSpaceCraft* x = new ColonizationSpaceCraft;
+        //Assing random positions
+        x->posX = rand()%(4 + 1);
+        x->posY = rand()%(4 + 1);
+        //Static name foo
+        x->name = "FOO";
+        //Push to universe
+        objects.push_back(x);
+      }
+      if (j == 5) {
+        ObservationSpaceCraft* x = new ObservationSpaceCraft;
+        //Assing random positions
+        x->posX = rand()%(4 + 1);
+        x->posY = rand()%(4 + 1);
+        //Static name foo
+        x->name = "FOO";
+        //Push to universe
+        objects.push_back(x);
+      }
+      if (j == 6) {
+        StonyAsteroid* x = new StonyAsteroid;
+        //Assing random positions
+        x->posX = rand()%(4 + 1);
+        x->posY = rand()%(4 + 1);
+        //Static name foo
+        x->name = "FOO";
+        //Push to universe
+        objects.push_back(x);
+      }
+      if (j == 7) {
+        DesertPlanet* x = new DesertPlanet;
+        //Assing random positions
+        x->posX = rand()%(4 + 1);
+        x->posY = rand()%(4 + 1);
+        //Static name foo
+        x->name = "FOO";
+        //Push to universe
+        objects.push_back(x);
+      }
+    }
   }
   void nextMove(/* arguments */) {
     /* code */
@@ -222,9 +302,9 @@ public:
 SpaceGod* SpaceGod::instance = 0;
 
 int main(int argc, char const *argv[]) {
-  /* code */
-  GameObject *x = new GameObject(1,2,"lol");
-  x->moveRandom();
+  /* Every constructor is private */
+  //GameObject *x = new GameObject(1,2,"lol");
+  //x->moveRandom();
   //Create god, god does everything
   SpaceGod *god = SpaceGod::getInstance();
   //God may create a random escenario, or you may tell it to create specific items
