@@ -26,39 +26,53 @@ template <class T>
 class Collection;
 
 class Board {
-private:
-  int space[BOARDX][BOARDY] = {{0}};
 public:
+  int space[BOARDX][BOARDY] = {{0}};
   Board () = default;
 };
 
 class GameObject {
 public:
+  int* x = new int[2];
   int posX;
   int posY;
+  int alive = 1;
   string name;
   GameObject() = default;
   GameObject (int X, int Y, string n): posX(X), posY(Y), name(n){}
-  void moveRandom(){
-    srand(time(NULL));
-    switch (rand()%(4 + 1)) {
-      case 1:
-        if (posX != BOARDX - 1) {
-          posX++;
-        }
-      case 2:
-        if (posX != 0) {
-          posX--;
-        }
-      case 3:
-        if (posY != BOARDY - 1) {
-          posY++;
-        }
-      case 4:
-        if (posY != 0) {
-          posY--;
-        }
+  int* moveRandom(int x[]){
+    if (alive) {
+      int y = rand()%(4) + 1;
+      std::cout << "Y" << y << '\n';
+      switch (y) {
+        case 1:
+        //Derecha
+          if (posX != BOARDX - 1) {
+            posX++;
+          }
+        case 2:
+        //Izquierda
+          if (posX != 0) {
+            posX--;
+          }
+        case 3:
+        //Arriba
+          if (posY != BOARDY - 1) {
+            posY++;
+          }
+        case 4:
+        //Abajo
+          if (posY != 0) {
+            posY--;
+          }
+      }
     }
+    x[0]=posX;
+    x[1]=posY;
+    return x;
+  }
+  int* lol(){
+    return x;
   }
   void notify(){
     std::cout << name << "recibió alerta de colisión!" << '\n';
@@ -195,6 +209,7 @@ public:
 class SpaceGod {
 private:
   int total = 0;
+  int game = 1;
   static SpaceGod *instance;
   Board board;
   std::vector<GameObject*> objects;
@@ -206,6 +221,7 @@ public:
   {
     if(!instance){
       instance = new SpaceGod;
+      srand(time(NULL));
     }
     return instance;
   }
@@ -222,12 +238,13 @@ public:
   }
   void createUniverse() {
     for (size_t i = 0; i < INITIALELEMENTS; i++) {
-      int j = rand()%(7 + 1);
+      int j = rand()%(6)+1;
       if (j == 1) {
         DesertPlanet* x = new DesertPlanet;
         //Assing random positions
-        x->posX = rand()%(4 + 1);
-        x->posY = rand()%(4 + 1);
+        x->posX = rand()%(9);
+        x->posY = rand()%(9);
+        board.space[x->posX][x->posY]++;
         //Static name foo
         x->name = "FOO";
         //Push to universe
@@ -238,8 +255,9 @@ public:
       if (j == 2) {
         EarthAnalog* x = new EarthAnalog;
         //Assing random positions
-        x->posX = rand()%(4 + 1);
-        x->posY = rand()%(4 + 1);
+        x->posX = rand()%(9);
+        x->posY = rand()%(9);
+        board.space[x->posX][x->posY]++;
         //Static name foo
         x->name = "FOO";
         //Push to universe
@@ -250,8 +268,9 @@ public:
       if (j == 3) {
         ExplorationSpaceCraft* x = new ExplorationSpaceCraft;
         //Assing random positions
-        x->posX = rand()%(4 + 1);
-        x->posY = rand()%(4 + 1);
+        x->posX = rand()%(9);
+        x->posY = rand()%(9);
+        board.space[x->posX][x->posY]++;
         //Static name foo
         x->name = "FOO";
         //Push to universe
@@ -262,8 +281,9 @@ public:
       if (j == 4) {
         ColonizationSpaceCraft* x = new ColonizationSpaceCraft;
         //Assing random positions
-        x->posX = rand()%(4 + 1);
-        x->posY = rand()%(4 + 1);
+        x->posX = rand()%(9);
+        x->posY = rand()%(9);
+        board.space[x->posX][x->posY]++;
         //Static name foo
         x->name = "FOO";
         //Push to universe
@@ -274,8 +294,9 @@ public:
       if (j == 5) {
         ObservationSpaceCraft* x = new ObservationSpaceCraft;
         //Assing random positions
-        x->posX = rand()%(4 + 1);
-        x->posY = rand()%(4 + 1);
+        x->posX = rand()%(9);
+        x->posY = rand()%(9);
+        board.space[x->posX][x->posY]++;
         //Static name foo
         x->name = "FOO";
         //Push to universe
@@ -286,8 +307,9 @@ public:
       if (j == 6) {
         StonyAsteroid* x = new StonyAsteroid;
         //Assing random positions
-        x->posX = rand()%(4 + 1);
-        x->posY = rand()%(4 + 1);
+        x->posX = rand()%(9);
+        x->posY = rand()%(9);
+        board.space[x->posX][x->posY]++;
         //Static name foo
         x->name = "FOO";
         //Push to universe
@@ -298,8 +320,9 @@ public:
       if (j == 7) {
         DesertPlanet* x = new DesertPlanet;
         //Assing random positions
-        x->posX = rand()%(4 + 1);
-        x->posY = rand()%(4 + 1);
+        x->posX = rand()%(9);
+        x->posY = rand()%(9);
+        board.space[x->posX][x->posY]++;
         //Static name foo
         x->name = "FOO";
         //Push to universe
@@ -308,22 +331,43 @@ public:
         control.i.addElement(y);
       }
     }
+    std::cout << "Universe created" << '\n';
+    printMap();
+  }
+  void startSimulation(/* arguments */) {
+    for (size_t i = 0; i < 10; i++) {
+      nextMove();
+    }
   }
   void nextMove(/* arguments */) {
     //Move each objects
-    int i = 0;
+    int y, i = 0;
+    int* x = new int[2];
+    int l[4] = {0};
     for(it = objects.begin(); it != objects.end(); it++, i++){
-      std::cout << "LOL" << '\n';
-      objects.at(i)->moveRandom();
-      /*if(objects.at(i)==ob){
-        // erase the element
-        objects.erase (objects.begin()+i);
-        return;
-      }*/
+      std::cout << "Position X:" << objects.at(i)->posX << '\n';
+      std::cout << "Position Y:" << objects.at(i)->posY << '\n';
+      board.space[objects.at(i)->posX][objects.at(i)->posY]--;
+      x = objects.at(i)->moveRandom(l);
+      //Update map
+      std::cout << "Position X:" << x[0] << '\n';
+      std::cout << "Position Y:" << x[1] << '\n';
+      board.space[x[0]][x[1]]++;
+      checkColitions();
     }
+    printMap();
   }
   void checkColitions(/* arguments */) {
     /* code */
+  }
+  void printMap() {
+    for (size_t i = 0; i < BOARDX; i++) {
+      for (size_t j = 0; j < BOARDY; j++) {
+        std::cout << board.space[j][i] << " ";
+      }
+      std::cout << '\n';
+    }
+    std::cout << '\n';
   }
 };
 
@@ -333,14 +377,14 @@ int main(int argc, char const *argv[]) {
   /* Every constructor is private */
   //GameObject *x = new GameObject(1,2,"lol");
   //x->moveRandom();
-  //Create god, god does everything
+  //Only one god can exist, god does everything
   SpaceGod *god = SpaceGod::getInstance();
   //God may create a random escenario, or you may tell it to create specific items
   god->createUniverse();
   //Tell god to create a few new Planets
-  //God automatically handle universe objects
-  god->factoryMethod<DesertPlanet>(1,2,"lol");
-  //But god also shares power returning the object
+  //God creates universe objects
+  /*god->factoryMethod<DesertPlanet>(1,2,"lol");
+  //God also shares power returning the object
   GameObject *y = god->factoryMethod<EarthAnalog>(1,2,"lol");
   //Tell god to create some ships
   god->factoryMethod<ExplorationSpaceCraft>(1,2,"lol");
@@ -348,8 +392,8 @@ int main(int argc, char const *argv[]) {
   god->factoryMethod<ObservationSpaceCraft>(1,2,"lol");
   //Tell god to create asteroids
   god->factoryMethod<IronAsteroid>(1,2,"lol");
-  god->factoryMethod<StonyAsteroid>(1,2,"lol");
-  //Now tell god to move everything
-  god->nextMove();
+  god->factoryMethod<StonyAsteroid>(1,2,"lol");*/
+  //Now tell god to start game
+  god->startSimulation();
   return 0;
 }
