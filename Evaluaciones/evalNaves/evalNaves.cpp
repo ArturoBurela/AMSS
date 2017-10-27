@@ -46,35 +46,44 @@ public:
 
     GameObject(int X, int Y, string n) : posX(X), posY(Y), name(n) {}
 
-    int *moveRandom(int l[]) {
+    int* moveRandom() {
+      x[0] = 0;
+      x[1] = 0;
         if (alive) {
             int y = rand() % (4) + 1;
-            //std::cout << "Y" << y << '\n';
             switch (y) {
                 case 1:
                     //Derecha
                     if (posX != BOARDX - 1 && board.space[posX+1][posY]!=2) {
+                      board.space[posX][posY]--;
                         posX++;
+                        board.space[posX][posY]++;
                     }
                 case 2:
                     //Izquierda
                     if (posX != 0 && board.space[posX-1][posY]!=2) {
+                      board.space[posX][posY]--;
                         posX--;
+                        board.space[posX][posY]++;
                     }
                 case 3:
                     //Arriba
                     if (posY != BOARDY - 1 && board.space[posX][posY+1]!=2) {
+                      board.space[posX][posY]--;
                         posY++;
+                        board.space[posX][posY]++;
                     }
                 case 4:
                     //Abajo
                     if (posY != 0 && board.space[posX][posY-1]!=2) {
+                      board.space[posX][posY]--;
                         posY--;
+                        board.space[posX][posY]++;
                     }
             }
+            x[0] = posX;
+            x[1] = posY;
         }
-        x[0] = posX;
-        x[1] = posY;
         return x;
     }
 
@@ -356,7 +365,7 @@ public:
     }
 
     void startSimulation(/* arguments */) {
-        while (total < MAXELEMENTS){
+        while (game){
             nextMove();
         }
         std::cout << "Terminado" << '\n';
@@ -368,15 +377,8 @@ public:
         int *x = new int[2];
         int l[4] = {0};
         for (it = objects.begin(); it != objects.end(); it++, i++) {
-            //std::cout << "Position X:" << objects.at(i)->posX << '\n';
-            //std::cout << "Position Y:" << objects.at(i)->posY << '\n';
-            board.space[objects.at(i)->posX][objects.at(i)->posY]--;
-            x = objects.at(i)->moveRandom(l);
-            //Update map
-            //std::cout << "Position X:" << x[0] << '\n';
-            //std::cout << "Position Y:" << x[1] << '\n';
-            board.space[x[0]][x[1]]++;
-            checkColitions(x);
+          x = objects.at(i)->moveRandom();
+          checkColitions(x);
         }
         printMap();
     }
@@ -386,15 +388,29 @@ public:
             int i = 0;
             vector<GameObject *>::iterator it2;
             for (it2 = objects.begin(); it2 != objects.end(); it2++, i++) {
-                std::cout << "Position X:" << objects.at(i)->posX << '\n';
-                std::cout << "Position Y:" << objects.at(i)->posY << '\n';
                 if(objects.at(i)->posX == x[0] && objects.at(i)->posY == x[1]){
+                    std::cout << "Killing in position: " << x[0] << "" << x[1] << '\n';
                     objects.at(i)->alive = 0;
-                    total++;
-                    std::cout << "total" << total << '\n';
+                    control.notifyObservers();
+                    checkFinish();
                 }
             }
         }
+    }
+
+    void checkFinish() {
+      total=0;
+      int i = 0;
+      vector<GameObject *>::iterator it2;
+      for (it2 = objects.begin(); it2 != objects.end(); it2++, i++) {
+          if(!objects.at(i)->alive){
+            total++;
+          }
+          if (total>= objects.size()-1) {
+            game = 0;
+          }
+      }
+      std::cout << "Total:" << total << '\n';
     }
 
     void printMap() {
@@ -420,7 +436,7 @@ int main(int argc, char const *argv[]) {
     god->createUniverse();
     //Tell god to create a few new Planets
     //God creates universe objects
-    god->factoryMethod<DesertPlanet>(1,2,"lol");
+    /*god->factoryMethod<DesertPlanet>(1,2,"lol");
     //God also shares power returning the object
     GameObject *y = god->factoryMethod<EarthAnalog>(5,2,"lol");
     //Tell god to create some ships
@@ -430,7 +446,7 @@ int main(int argc, char const *argv[]) {
     //Tell god to create asteroids
     god->factoryMethod<IronAsteroid>(5,7,"lol");
     god->factoryMethod<StonyAsteroid>(3,5,"lol");
-    //Now tell god to start game
+    //Now tell god to start game*/
     god->startSimulation();
     return 0;
 }
