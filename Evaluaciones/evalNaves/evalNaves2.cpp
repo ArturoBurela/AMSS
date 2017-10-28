@@ -238,7 +238,7 @@ public:
         //delete suscribers;
     };
     void randomScenario(){
-        GameObject* x = factory->create<GameObject>();
+        GameObject* x;
         for (int i = 0; i < INITIALELEMENTS; ++i) {
 
         }
