@@ -240,9 +240,15 @@ public:
     void randomScenario(){
         GameObject* x;
         for (int i = 0; i < INITIALELEMENTS; ++i) {
-
+            x = factory->create<DesertPlanet>();
+            objects.push_back(x);
+            delete x;
         }
-        delete x;
+        int i = 0;
+        for (it = objects.begin(); it != objects.end(); it++, i++) {
+            std::cout << "Object: " << i << " name " << objects.at(i)->name << '\n';
+        }
+        objects.clear();
     }
 };
 
