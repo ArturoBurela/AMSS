@@ -46,37 +46,37 @@ public:
 
     GameObject(int X, int Y, string n) : posX(X), posY(Y), name(n) {}
 
-    int* moveRandom() {
-      x[0] = 0;
-      x[1] = 0;
+    int *moveRandom() {
+        x[0] = 0;
+        x[1] = 0;
         if (alive) {
             int y = rand() % (4) + 1;
             switch (y) {
                 case 1:
                     //Derecha
-                    if (posX != BOARDX - 1 && board.space[posX+1][posY]!=2) {
-                      board.space[posX][posY]--;
+                    if (posX != BOARDX - 1 && board.space[posX + 1][posY] != 2) {
+                        board.space[posX][posY]--;
                         posX++;
                         board.space[posX][posY]++;
                     }
                 case 2:
                     //Izquierda
-                    if (posX != 0 && board.space[posX-1][posY]!=2) {
-                      board.space[posX][posY]--;
+                    if (posX != 0 && board.space[posX - 1][posY] != 2) {
+                        board.space[posX][posY]--;
                         posX--;
                         board.space[posX][posY]++;
                     }
                 case 3:
                     //Arriba
-                    if (posY != BOARDY - 1 && board.space[posX][posY+1]!=2) {
-                      board.space[posX][posY]--;
+                    if (posY != BOARDY - 1 && board.space[posX][posY + 1] != 2) {
+                        board.space[posX][posY]--;
                         posY++;
                         board.space[posX][posY]++;
                     }
                 case 4:
                     //Abajo
-                    if (posY != 0 && board.space[posX][posY-1]!=2) {
-                      board.space[posX][posY]--;
+                    if (posY != 0 && board.space[posX][posY - 1] != 2) {
+                        board.space[posX][posY]--;
                         posY--;
                         board.space[posX][posY]++;
                     }
@@ -365,7 +365,7 @@ public:
     }
 
     void startSimulation(/* arguments */) {
-        while (game){
+        while (game) {
             nextMove();
         }
         std::cout << "Terminado" << '\n';
@@ -377,18 +377,18 @@ public:
         int *x = new int[2];
         int l[4] = {0};
         for (it = objects.begin(); it != objects.end(); it++, i++) {
-          x = objects.at(i)->moveRandom();
-          checkColitions(x);
+            x = objects.at(i)->moveRandom();
+            checkColitions(x);
         }
         printMap();
     }
 
     void checkColitions(int x[]) {
-        if (board.space[x[0]][x[1]]>=2){
+        if (board.space[x[0]][x[1]] >= 2) {
             int i = 0;
             vector<GameObject *>::iterator it2;
             for (it2 = objects.begin(); it2 != objects.end(); it2++, i++) {
-                if(objects.at(i)->posX == x[0] && objects.at(i)->posY == x[1]){
+                if (objects.at(i)->posX == x[0] && objects.at(i)->posY == x[1]) {
                     std::cout << "Killing in position: " << x[0] << "" << x[1] << '\n';
                     objects.at(i)->alive = 0;
                     control.notifyObservers();
@@ -399,18 +399,18 @@ public:
     }
 
     void checkFinish() {
-      total=0;
-      int i = 0;
-      vector<GameObject *>::iterator it2;
-      for (it2 = objects.begin(); it2 != objects.end(); it2++, i++) {
-          if(!objects.at(i)->alive){
-            total++;
-          }
-          if (total>= objects.size()-1) {
-            game = 0;
-          }
-      }
-      std::cout << "Total:" << total << '\n';
+        total = 0;
+        int i = 0;
+        vector<GameObject *>::iterator it2;
+        for (it2 = objects.begin(); it2 != objects.end(); it2++, i++) {
+            if (!objects.at(i)->alive) {
+                total++;
+            }
+            if (total >= objects.size() - 1) {
+                game = 0;
+            }
+        }
+        std::cout << "Total:" << total << '\n';
     }
 
     void printMap() {
